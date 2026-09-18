@@ -1,27 +1,33 @@
 #include <stdio.h>
+#ifndef HOSPITAL_H
+#define HOSPITAL_H
+#define MAX_SPECIALTIES 4
+#define MAX_WARDS 4
+#define MAX_BEDS 20
 
-char specialtyName[4][30] = {
+char specialtyName[MAX_SPECIALTIES][30] = {
     "General Practice (OPD)",
     "Paediatrics",
     "Cardiology",
     "Neurology"
 };
-float specialtyFee[4] = {1500.00,2500.00,4500.00,5000.00};
-int specialtyTimePerPatient[4] = {15,20,30,30};
-int specialtyDailyCap[4] = {30,20,12,10};
+float specialtyFee[MAX_SPECIALTIES] = { 1500.00, 2500.00, 4500.00, 5000.00};
+int specialtyTimePerPatient[MAX_SPECIALTIES] = { 15, 20, 30, 30};
+int specialtyDailyCap[MAX_SPECIALTIES] = { 30, 20, 12, 10};
+
 /* ---------------- Hospital Wards Lookup Table ---------------- */
 
-char wardName[4][40] = {
+char wardName[MAX_WARDS][40] = {
     "General Ward",
     "Paediatric Ward",
     "Surgical Ward",
     "ICU (Intensive Care Unit)"
 };
-float wardDailyRate[4] = {3000.00,6000.00,12000.00,25000.00};
-int wardBedCapacity[4] = {20,10,10,5};
-int bedOccupancy[4][20];
+float wardDailyRate[MAX_WARDS] = { 3000.00, 6000.00, 12000.00, 25000.00};
+int wardBedCapacity[MAX_WARDS] = { 20, 10, 10, 5};
+int bedOccupancy[MAX_WARDS][MAX_BEDS];
 
-/* ---------------- Function prototypes ---------------- */
+/* ---------------- Function Prototypes ---------------- */
 
 void initialiseBedMatrix(void);
 void displaySpecialtyTable(void);
@@ -31,7 +37,10 @@ int findFreeBed(int wardIndex);
 void occupyBed(int wardIndex, int bedIndex);
 void freeBed(int wardIndex, int bedIndex);
 
-int main(void) {
+#endif
+
+int main(void)
+{
     initialiseBedMatrix();
     displaySpecialtyTable();
     displayWardTable();
@@ -45,21 +54,22 @@ int main(void) {
     displayBedMatrix();
     return 0;
 }
-void initialiseBedMatrix(void) {
-    for (int w = 0; w < 4; w++) {
-        for (int b = 0; b < 20; b++) {
+
+void initialiseBedMatrix(void)
+{
+    for (int w = 0; w < MAX_WARDS; w++) {
+        for (int b = 0; b < MAX_BEDS; b++) {
             if (b < wardBedCapacity[w]) {
                 bedOccupancy[w][b] = 0;
-            }
-            else {
+            } else {
                 bedOccupancy[w][b] = 1;
             }
         }
     }
 }
-/* Display Doctor Specialty Table */
 
-void displaySpecialtyTable(void) {
+void displaySpecialtyTable(void)
+{
     printf("\n--- Doctor Specialties ---\n");
     printf("%-4s %-25s %-12s %-10s %-6s\n",
            "ID",
@@ -67,7 +77,8 @@ void displaySpecialtyTable(void) {
            "Fee(LKR)",
            "Time/Pt",
            "Cap");
-    for (int i = 0; i < 4; i++) {
+
+    for (int i = 0; i < MAX_SPECIALTIES; i++) {
         printf("%-4d %-25s %-12.2f %-10d %-6d\n",
                i + 1,
                specialtyName[i],
@@ -76,16 +87,16 @@ void displaySpecialtyTable(void) {
                specialtyDailyCap[i]);
     }
 }
-/* Display Hospital Ward Table */
-
-void displayWardTable(void) {
+void displayWardTable(void)
+{
     printf("\n--- Hospital Wards ---\n");
     printf("%-4s %-28s %-15s %-10s\n",
            "ID",
            "Name",
            "Rate(LKR/Day)",
            "Beds");
-    for (int i = 0; i < 4; i++) {
+
+    for (int i = 0; i < MAX_WARDS; i++) {
         printf("%-4d %-28s %-15.2f %-10d\n",
                i + 1,
                wardName[i],
@@ -93,9 +104,10 @@ void displayWardTable(void) {
                wardBedCapacity[i]);
     }
 }
-void displayBedMatrix(void) {
+void displayBedMatrix(void)
+{
     printf("\n--- Bed Occupancy Matrix (0 = Available, 1 = Occupied) ---\n");
-    for (int w = 0; w < 4; w++) {
+    for (int w = 0; w < MAX_WARDS; w++) {
         printf("%-28s: ", wardName[w]);
         for (int b = 0; b < wardBedCapacity[w]; b++) {
             printf("%d ", bedOccupancy[w][b]);
@@ -103,7 +115,8 @@ void displayBedMatrix(void) {
         printf("\n");
     }
 }
-int findFreeBed(int wardIndex) {
+int findFreeBed(int wardIndex)
+{
     for (int b = 0; b < wardBedCapacity[wardIndex]; b++) {
         if (bedOccupancy[wardIndex][b] == 0) {
             return b;
@@ -111,9 +124,11 @@ int findFreeBed(int wardIndex) {
     }
     return -1;
 }
-void occupyBed(int wardIndex, int bedIndex) {
+void occupyBed(int wardIndex, int bedIndex)
+{
     bedOccupancy[wardIndex][bedIndex] = 1;
 }
-void freeBed(int wardIndex, int bedIndex) {
+void freeBed(int wardIndex, int bedIndex)
+{
     bedOccupancy[wardIndex][bedIndex] = 0;
 }
