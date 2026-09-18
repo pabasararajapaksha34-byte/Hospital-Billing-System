@@ -1,0 +1,119 @@
+#include <stdio.h>
+
+char specialtyName[4][30] = {
+    "General Practice (OPD)",
+    "Paediatrics",
+    "Cardiology",
+    "Neurology"
+};
+float specialtyFee[4] = {1500.00,2500.00,4500.00,5000.00};
+int specialtyTimePerPatient[4] = {15,20,30,30};
+int specialtyDailyCap[4] = {30,20,12,10};
+/* ---------------- Hospital Wards Lookup Table ---------------- */
+
+char wardName[4][40] = {
+    "General Ward",
+    "Paediatric Ward",
+    "Surgical Ward",
+    "ICU (Intensive Care Unit)"
+};
+float wardDailyRate[4] = {3000.00,6000.00,12000.00,25000.00};
+int wardBedCapacity[4] = {20,10,10,5};
+int bedOccupancy[4][20];
+
+/* ---------------- Function prototypes ---------------- */
+
+void initialiseBedMatrix(void);
+void displaySpecialtyTable(void);
+void displayWardTable(void);
+void displayBedMatrix(void);
+int findFreeBed(int wardIndex);
+void occupyBed(int wardIndex, int bedIndex);
+void freeBed(int wardIndex, int bedIndex);
+
+int main(void) {
+    initialiseBedMatrix();
+    displaySpecialtyTable();
+    displayWardTable();
+    displayBedMatrix();
+    int freeIdx = findFreeBed(3);
+
+    if (freeIdx != -1) {
+        occupyBed(3, freeIdx);
+        printf("\n[Demo] Occupied ICU bed #%d\n", freeIdx + 1);
+    }
+    displayBedMatrix();
+    return 0;
+}
+void initialiseBedMatrix(void) {
+    for (int w = 0; w < 4; w++) {
+        for (int b = 0; b < 20; b++) {
+            if (b < wardBedCapacity[w]) {
+                bedOccupancy[w][b] = 0;
+            }
+            else {
+                bedOccupancy[w][b] = 1;
+            }
+        }
+    }
+}
+/* Display Doctor Specialty Table */
+
+void displaySpecialtyTable(void) {
+    printf("\n--- Doctor Specialties ---\n");
+    printf("%-4s %-25s %-12s %-10s %-6s\n",
+           "ID",
+           "Name",
+           "Fee(LKR)",
+           "Time/Pt",
+           "Cap");
+    for (int i = 0; i < 4; i++) {
+        printf("%-4d %-25s %-12.2f %-10d %-6d\n",
+               i + 1,
+               specialtyName[i],
+               specialtyFee[i],
+               specialtyTimePerPatient[i],
+               specialtyDailyCap[i]);
+    }
+}
+/* Display Hospital Ward Table */
+
+void displayWardTable(void) {
+    printf("\n--- Hospital Wards ---\n");
+    printf("%-4s %-28s %-15s %-10s\n",
+           "ID",
+           "Name",
+           "Rate(LKR/Day)",
+           "Beds");
+    for (int i = 0; i < 4; i++) {
+        printf("%-4d %-28s %-15.2f %-10d\n",
+               i + 1,
+               wardName[i],
+               wardDailyRate[i],
+               wardBedCapacity[i]);
+    }
+}
+void displayBedMatrix(void) {
+    printf("\n--- Bed Occupancy Matrix (0 = Available, 1 = Occupied) ---\n");
+    for (int w = 0; w < 4; w++) {
+        printf("%-28s: ", wardName[w]);
+        for (int b = 0; b < wardBedCapacity[w]; b++) {
+            printf("%d ", bedOccupancy[w][b]);
+        }
+        printf("\n");
+    }
+}
+int findFreeBed(int wardIndex) {
+    for (int b = 0; b < wardBedCapacity[wardIndex]; b++) {
+        if (bedOccupancy[wardIndex][b] == 0) {
+            return b;
+        }
+    }
+    return -1;
+}
+void occupyBed(int wardIndex, int bedIndex) {
+    bedOccupancy[wardIndex][bedIndex] = 1;
+}
+void freeBed(int wardIndex, int bedIndex) {
+    bedOccupancy[wardIndex][bedIndex] = 0;
+}
