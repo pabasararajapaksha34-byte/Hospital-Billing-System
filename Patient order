@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <string.h>
+
+char patientName[100][50];
+int patientAge[100];
+int patientTriage[100];
+int patientCount = 0;
+
+/* Function declarations */
+void addPatients();
+void sortPatients();
+
+int main()
+{
+    addPatients();
+    printf("===== BEFORE SORTING =====\n");
+    for (int i = 0; i < patientCount; i++) {
+        printf("%d. %s  Age: %d  ", 
+            i + 1, patientName[i], patientAge[i]);
+        if (patientTriage[i] == 3)
+            printf("Critical\n");
+        else if (patientTriage[i] == 2)
+            printf("Urgent\n");
+        else
+            printf("Normal\n");
+    }
+    sortPatients();
+    return 0;
+}
+void addPatients()
+{
+    strcpy(patientName[0], "Kamal");
+    patientAge[0] = 70;
+    patientTriage[0] = 3;
+
+    strcpy(patientName[1], "Nadeesha");
+    patientAge[1] = 34;
+    patientTriage[1] = 1;
+
+    strcpy(patientName[2], "Sithumi");
+    patientAge[2] = 2;
+    patientTriage[2] = 3;
+
+    strcpy(patientName[3], "Ruwan");
+    patientAge[3] = 45;
+    patientTriage[3] = 2;
+
+    strcpy(patientName[4], "Chamari");
+    patientAge[4] = 60;
+    patientTriage[4] = 1;
+
+    patientCount = 5;
+}
+void sortPatients()
+{
+    for (int i = 0; i < patientCount - 1; i++) {
+        for (int j = 0; j < patientCount - 1 - i; j++)
+{
+            if (patientTriage[j] < patientTriage[j + 1])
+            {
+                /* Swap triage */
+                int temp = patientTriage[j];
+                patientTriage[j] = patientTriage[j + 1];
+                patientTriage[j + 1] = temp;
+
+                /* Swap age */
+                temp = patientAge[j];
+                patientAge[j] = patientAge[j + 1];
+                patientAge[j + 1] = temp;
+
+                /* Swap name */
+                char tempName[50];
+                strcpy(tempName, patientName[j]);
+                strcpy(patientName[j], patientName[j + 1]);
+                strcpy(patientName[j + 1], tempName);
+            }
+        }
+    }
+    printf("\n===== AFTER SORTING =====\n");
+    for (int i = 0; i < patientCount; i++) {
+        printf("%d. %s  Age: %d  ", i + 1, patientName[i], patientAge[i]);
+        if (patientTriage[i] == 3)
+            printf("Critical\n");
+        else if (patientTriage[i] == 2)
+            printf("Urgent\n");
+        else
+            printf("Normal\n");
+    }
+}
