@@ -1,1 +1,151 @@
+#include <stdio.h>
+#include <string.h>
 
+char specialty[4][30] = { "General Practice", "Paediatrics", "Cardiology", "Neurology" };
+float specialtyFee[4] = { 1500, 2500, 4500, 5000 };
+char ward[4][30] = { "General Ward", "Paediatric Ward", "Surgical Ward", "ICU"};
+float wardRate[4] = { 3000, 6000, 12000, 25000 };
+
+struct Patient
+{
+    int id;
+    char name[50];
+    int age;
+    int triage;
+    int specialty;
+    int admitted;
+    int ward;
+    int bed;
+    int days;
+    float surcharge;
+    float wardCost;
+    float total;
+    float discount;
+    float finalAmount;
+};
+
+/* Function */
+
+void printBill(struct Patient p);
+
+int main()
+{
+    struct Patient p;
+    /* Patient details */
+    printf("Enter Patient ID: ");
+    scanf("%d", &p.id);
+
+    printf("Enter Patient Name: ");
+    scanf(" %[^\n]", p.name);
+
+    printf("Enter Age: ");
+    scanf("%d", &p.age);
+
+    printf("\nSelect Specialty:\n");
+    printf("1. General Practice\n");
+    printf("2. Paediatrics\n");
+    printf("3. Cardiology\n");
+    printf("4. Neurology\n");
+
+    printf("Enter choice: ");
+    scanf("%d", &p.specialty);
+
+    p.specialty = p.specialty - 1;
+    printf("\nSelect Triage Level:\n");
+    printf("1. Normal\n");
+    printf("2. Urgent\n");
+    printf("3. Critical\n");
+
+    printf("Enter choice: ");
+    scanf("%d", &p.triage);
+
+    printf("\nIs the patient admitted?\n");
+    printf("1. Yes\n");
+    printf("0. No\n");
+
+    printf("Enter choice: ");
+    scanf("%d", &p.admitted);
+
+    if (p.admitted == 1) {
+        printf("\nSelect Ward:\n");
+        printf("1. General Ward\n");
+        printf("2. Paediatric Ward\n");
+        printf("3. Surgical Ward\n");
+        printf("4. ICU\n");
+
+        printf("Enter choice: ");
+        scanf("%d", &p.ward);
+        p.ward = p.ward - 1;
+
+        printf("Enter Bed Number: ");
+        scanf("%d", &p.bed);
+
+        printf("Enter Number of Days: ");
+        scanf("%d", &p.days);
+        p.wardCost = wardRate[p.ward] * p.days;
+    } else {
+        p.ward = 0;
+        p.bed = 0;
+        p.days = 0;
+        p.wardCost = 0;
+    }
+  
+    if (p.triage == 3)
+        p.surcharge = 2250;
+    else if (p.triage == 2)
+        p.surcharge = 1000;
+    else
+        p.surcharge = 0;
+
+    /* Calculate total */
+
+    p.total = specialtyFee[p.specialty] + p.surcharge + p.wardCost;
+
+    /* Discount */
+
+    p.discount = p.total * 0.15;
+    p.finalAmount = p.total - p.discount;
+
+    /* Display bill */
+
+    printBill(p);
+    return 0;
+}
+void printBill(struct Patient p)
+{
+    printf("\n====================================\n");
+    printf("       SMART HOSPITAL BILL\n");
+    printf("====================================\n");
+    printf("Patient ID   : %d\n", p.id);
+    printf("Name         : %s\n", p.name);
+    printf("Age          : %d\n", p.age);
+
+    printf("Specialty    : %s\n",
+           specialty[p.specialty]);
+
+    printf("Triage       : ");
+
+    if (p.triage == 3)
+        printf("Critical\n");
+    else if (p.triage == 2)
+        printf("Urgent\n");
+    else
+        printf("Normal\n");
+
+    if (p.admitted == 1) {
+        printf("Ward         : %s\n", ward[p.ward]);
+        printf("Bed          : %d\n", p.bed);
+        printf("Days         : %d\n", p.days);
+    } else {
+        printf("Ward         : Not Admitted\n");
+    }
+    /* Bill */
+    printf("\n----------- BILL -----------\n");
+    printf("Consultation : LKR %.2f\n", specialtyFee[p.specialty]);
+    printf("Surcharge    : LKR %.2f\n", p.surcharge);
+    printf("Ward Cost    : LKR %.2f\n", p.wardCost);
+    printf("Gross Total  : LKR %.2f\n", p.total);
+    printf("Discount     : LKR %.2f\n", p.discount);
+    printf("Final Amount : LKR %.2f\n", p.finalAmount);
+    printf("============================\n");
+}
