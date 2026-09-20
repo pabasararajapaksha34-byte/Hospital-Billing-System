@@ -1,5 +1,4 @@
 #include <stdio.h>
-
 #include "bill.h"
 #include "patient.h"
 #include "hospital.h"
@@ -16,31 +15,14 @@ void generateBill(int patientIndex)
     float finalAmount;
     float waitingTime;
 
+    FILE *file;
     p = patients[patientIndex];
-
     baseFee = specialtyFee[p.specialty];
-
     surcharge = calculateSurcharge(p.specialty, p.triage);
-
-    wardCost = calculateWardCost(
-        p.ward,
-        p.days,
-        p.admitted
-    );
-
-    grossTotal = calculateGrossTotal(
-        baseFee,
-        surcharge,
-        wardCost
-    );
-
-    discount = calculateDiscount(
-        grossTotal,
-        p.age
-    );
-
+    wardCost = calculateWardCost(p.ward, p.days, p.admitted);
+    grossTotal = calculateGrossTotal(baseFee, surcharge, wardCost);
+    discount = calculateDiscount( grossTotal, p.age);
     finalAmount = grossTotal - discount;
-
     waitingTime = calculateWaitingTime(p.specialty);
 
     printf("\n====================================\n");
@@ -51,8 +33,7 @@ void generateBill(int patientIndex)
     printf("Name         : %s\n", p.name);
     printf("Age          : %d\n", p.age);
 
-    printf("Specialty    : %s\n",
-           specialtyName[p.specialty]);
+    printf("Specialty    : %s\n", specialtyName[p.specialty]);
 
     printf("Triage       : ");
 
@@ -62,45 +43,45 @@ void generateBill(int patientIndex)
         printf("Urgent\n");
     else
         printf("Normal\n");
-
     if (p.admitted == 1) {
 
-        printf("Ward         : %s\n",
-               wardName[p.ward]);
-
-        printf("Bed          : %d\n",
-               p.bed + 1);
-
-        printf("Days         : %d\n",
-               p.days);
-
+        printf("Ward         : %s\n", wardName[p.ward]);
+        printf("Bed          : %d\n", p.bed + 1);
+        printf("Days         : %d\n", p.days);
     } else {
-
         printf("Ward         : Not Admitted\n");
     }
 
     printf("\n----------- BILL -----------\n");
 
-    printf("Consultation : LKR %.2f\n",
-           baseFee);
-
-    printf("Surcharge    : LKR %.2f\n",
-           surcharge);
-
-    printf("Ward Cost    : LKR %.2f\n",
-           wardCost);
-
-    printf("Gross Total  : LKR %.2f\n",
-           grossTotal);
-
-    printf("Discount     : LKR %.2f\n",
-           discount);
-
-    printf("Final Amount : LKR %.2f\n",
-           finalAmount);
-
-    printf("Waiting Time : %.2f minutes\n",
-           waitingTime);
+    printf("Consultation : LKR %.2f\n", baseFee);
+    printf("Surcharge    : LKR %.2f\n", surcharge);
+    printf("Ward Cost    : LKR %.2f\n", wardCost);
+    printf("Gross Total  : LKR %.2f\n", grossTotal);
+    printf("Discount     : LKR %.2f\n", discount);
+    printf("Final Amount : LKR %.2f\n", finalAmount);
+    printf("Waiting Time : %.2f minutes\n", waitingTime);
 
     printf("============================\n");
+
+    /* Save billing record */
+
+    file = fopen("patient_records.txt", "a");
+
+    if (file != NULL) {
+
+        fprintf(file,
+                "%d|%s|%.2f|%.2f|%.2f\n",
+                p.id,
+                p.name,
+                grossTotal,
+                discount,
+                finalAmount);
+
+        fclose(file);
+
+        printf("\nBilling record saved successfully.\n");
+    } else {
+        printf("\nError saving billing record.\n");
+    }
 }
