@@ -1,14 +1,6 @@
-#ifndef PATIENT_H
-#define PATIENT_H
-#define MAX_PATIENTS 100
-#define MAX_NAME 50
+#ifndef PRIORITY_H
+#define PRIORITY_H
 
-extern char patientName[MAX_PATIENTS][MAX_NAME];
-extern int patientAge[MAX_PATIENTS];
-extern int patientTriage[MAX_PATIENTS];
-extern int patientCount;
-
-void addPatient(void);
-void displayPatients(void);
+void sortAndDisplayByPriority(void);
 
 #endif
