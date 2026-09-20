@@ -3,6 +3,7 @@
 #include "patient.h"
 #include "priority.h"
 #include "bill.h"
+#include "report.h"
 
 int main(void)
 {
@@ -22,7 +23,8 @@ int main(void)
         printf("5. Display Patients\n");
         printf("6. Display Patients by Priority\n");
         printf("7. Generate Patient Bill\n");
-        printf("8. Exit\n");
+        printf("8. Performance Reports\n");
+        printf("9. Exit\n");
 
         printf("\nEnter your choice: ");
         scanf("%d", &choice);
@@ -47,33 +49,35 @@ int main(void)
                 sortAndDisplayByPriority();
                 break;
             case 7:
-    if (patientCount == 0) {
-        printf("\nNo patients registered.\n");
-    } else {
-        int found = 0;
-        displayPatients();
-        printf("\nEnter Patient ID: ");
-        scanf("%d", &patientID);
+                if (patientCount == 0) {
+                    printf("\nNo patients registered.\n");
+                } else {
+                    int found = 0;
+                    displayPatients();
+                    printf("\nEnter Patient ID: ");
+                    scanf("%d", &patientID);
 
-        for (int i = 0; i < patientCount; i++) {
-            if (patients[i].id == patientID) {
-                generateBill(i);
-                found = 1;
+                    for (int i = 0; i < patientCount; i++) {
+                        if (patients[i].id == patientID) {
+                            generateBill(i);
+                            found = 1;
+                            break;
+                        }
+                    }
+                    if (found == 0) {
+                        printf("\nInvalid Patient ID!\n");
+                    }
+                }
                 break;
-            }
-        }
-        if (found == 0) {
-            printf("\nInvalid Patient ID!\n");
-        }
-    }
-    break;
             case 8:
+                generatePerformanceReport();
+                break;
+            case 9:
                 printf("\nExiting program...\n");
                 break;
             default:
                 printf("\nInvalid choice!\n");
         }
-    } while (choice != 8);
-    
+    } while (choice != 9);
     return 0;
 }
