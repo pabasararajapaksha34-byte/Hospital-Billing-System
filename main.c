@@ -47,22 +47,26 @@ int main(void)
                 sortAndDisplayByPriority();
                 break;
             case 7:
-                if (patientCount == 0) {
-                    printf("\nNo patients registered.\n");
-                } else {
-                    displayPatients();
+    if (patientCount == 0) {
+        printf("\nNo patients registered.\n");
+    } else {
+        int found = 0;
+        displayPatients();
+        printf("\nEnter Patient ID: ");
+        scanf("%d", &patientID);
 
-                    printf("\nEnter Patient ID: ");
-                    scanf("%d", &patientID);
-
-                    if (patientID >= 1 &&
-                        patientID <= patientCount) {
-                        generateBill(patientID - 1);
-                    } else {
-                        printf("\nInvalid Patient ID!\n");
-                    }
-                }
+        for (int i = 0; i < patientCount; i++) {
+            if (patients[i].id == patientID) {
+                generateBill(i);
+                found = 1;
                 break;
+            }
+        }
+        if (found == 0) {
+            printf("\nInvalid Patient ID!\n");
+        }
+    }
+    break;
             case 8:
                 printf("\nExiting program...\n");
                 break;
