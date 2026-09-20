@@ -13,14 +13,19 @@ extern int specialtyDailyCap[MAX_SPECIALTIES];
 extern char wardName[MAX_WARDS][40];
 extern float wardDailyRate[MAX_WARDS];
 extern int wardBedCapacity[MAX_WARDS];
+
 extern int bedOccupancy[MAX_WARDS][MAX_BEDS];
 
 void initialiseBedMatrix(void);
 void displaySpecialtyTable(void);
 void displayWardTable(void);
 void displayBedMatrix(void);
+
 int findFreeBed(int wardIndex);
 void occupyBed(int wardIndex, int bedIndex);
 void freeBed(int wardIndex, int bedIndex);
+
+void saveBedStatus(void);
+void loadBedStatus(void);
 
 #endif
